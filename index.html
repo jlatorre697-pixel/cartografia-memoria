@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Cartografía de la memoria</title></head>
+<body style="margin:0;background:#F4ECDF;font-family:Georgia,serif;color:#3b2f25">
+<p id="cm-msg" style="text-align:center;margin-top:30vh;font-size:18px">Cargando Cartografía de la memoria…</p>
+<script>
+(function(){
+  var EXEC='https://script.google.com/macros/s/AKfycbztiQCFjEt_pUa5NJ57CVh9uPLlaRyGpN-vKftkeYJKzlJOnI2hXzWnP4n4NdRgvARA/exec';
+  function fallo(){document.getElementById('cm-msg').innerHTML='No pudimos cargar la actividad. Recarga la página en unos segundos.';}
+  fetch(EXEC+'?r=html').then(function(r){if(!r.ok)throw 0;return r.text();}).then(function(h){
+    if(h.indexOf('id="app"')<0)throw 0;
+    window.CM_EXEC=EXEC;
+    var d=new DOMParser().parseFromString(h,'text/html');
+    var scripts=[].slice.call(d.querySelectorAll('script'));
+    scripts.forEach(function(x){x.parentNode.removeChild(x);});
+    document.title=d.title||document.title;
+    document.head.insertAdjacentHTML('beforeend',d.head.innerHTML);
+    document.body.setAttribute('style','');
+    document.body.innerHTML=d.body.innerHTML;
+    scripts.forEach(function(x){var n=document.createElement('script');n.textContent=x.textContent;document.body.appendChild(n);});
+  }).catch(fallo);
+})();
+</script>
+</body></html>
